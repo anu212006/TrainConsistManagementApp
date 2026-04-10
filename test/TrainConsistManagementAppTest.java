@@ -1,47 +1,56 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-public class BogieSearchBinaryTest {
+public class TrainSearchUC20Test {
 
     @Test
-    void testBinarySearch_BogieFound() {
-        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG309"));
-    }
+    void testSearch_ThrowsExceptionWhenEmpty() {
 
-    @Test
-    void testBinarySearch_BogieNotFound() {
-        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
-        assertFalse(BogieSearchBinary.binarySearchBogie(data, "BG999"));
-    }
-
-    @Test
-    void testBinarySearch_FirstElementMatch() {
-        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG101"));
-    }
-
-    @Test
-    void testBinarySearch_LastElementMatch() {
-        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG550"));
-    }
-
-    @Test
-    void testBinarySearch_SingleElementArray() {
-        String[] data = {"BG101"};
-        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG101"));
-    }
-
-    @Test
-    void testBinarySearch_EmptyArray() {
         String[] data = {};
-        assertFalse(BogieSearchBinary.binarySearchBogie(data, "BG101"));
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> TrainSearchUC20.searchBogie(data, "BG101")
+        );
     }
 
     @Test
-    void testBinarySearch_UnsortedInputHandled() {
-        String[] data = {"BG309","BG101","BG550","BG205","BG412"};
-        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG205"));
+    void testSearch_AllowsSearchWhenDataExists() {
+
+        String[] data = {"BG101", "BG205"};
+
+        assertDoesNotThrow(
+                () -> TrainSearchUC20.searchBogie(data, "BG101")
+        );
+    }
+
+    @Test
+    void testSearch_BogieFoundAfterValidation() {
+
+        String[] data = {"BG101","BG205","BG309"};
+
+        assertTrue(
+                TrainSearchUC20.searchBogie(data, "BG205")
+        );
+    }
+
+    @Test
+    void testSearch_BogieNotFoundAfterValidation() {
+
+        String[] data = {"BG101","BG205","BG309"};
+
+        assertFalse(
+                TrainSearchUC20.searchBogie(data, "BG999")
+        );
+    }
+
+    @Test
+    void testSearch_SingleElementValidCase() {
+
+        String[] data = {"BG101"};
+
+        assertTrue(
+                TrainSearchUC20.searchBogie(data, "BG101")
+        );
     }
 }
