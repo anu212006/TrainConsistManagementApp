@@ -3,15 +3,52 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrainConsistManagementAppTest {
 
-    // testSort_BasicSorting
+    // testSort_BasicAlphabeticalSorting
     @Test
-    void testSort_BasicSorting() {
+    void testSort_BasicAlphabeticalSorting() {
 
-        int[] input = {72, 56, 24, 70, 60};
-        int[] expected = {24, 56, 60, 70, 72};
+        String[] input = {
+                "Sleeper",
+                "AC Chair",
+                "First Class",
+                "General",
+                "Luxury"
+        };
 
-        int[] result =
-                TrainConsistManagementApp.bubbleSort(input);
+        String[] expected = {
+                "AC Chair",
+                "First Class",
+                "General",
+                "Luxury",
+                "Sleeper"
+        };
+
+        String[] result =
+                TrainConsistManagementApp.sortBogieNames(input);
+
+        assertArrayEquals(expected, result);
+    }
+
+    // testSort_UnsortedInput
+    @Test
+    void testSort_UnsortedInput() {
+
+        String[] input = {
+                "Luxury",
+                "General",
+                "Sleeper",
+                "AC Chair"
+        };
+
+        String[] expected = {
+                "AC Chair",
+                "General",
+                "Luxury",
+                "Sleeper"
+        };
+
+        String[] result =
+                TrainConsistManagementApp.sortBogieNames(input);
 
         assertArrayEquals(expected, result);
     }
@@ -20,24 +57,44 @@ class TrainConsistManagementAppTest {
     @Test
     void testSort_AlreadySortedArray() {
 
-        int[] input = {24, 56, 60, 70, 72};
-        int[] expected = {24, 56, 60, 70, 72};
+        String[] input = {
+                "AC Chair",
+                "First Class",
+                "General"
+        };
 
-        int[] result =
-                TrainConsistManagementApp.bubbleSort(input);
+        String[] expected = {
+                "AC Chair",
+                "First Class",
+                "General"
+        };
+
+        String[] result =
+                TrainConsistManagementApp.sortBogieNames(input);
 
         assertArrayEquals(expected, result);
     }
 
-    // testSort_DuplicateValues
+    // testSort_DuplicateBogieNames
     @Test
-    void testSort_DuplicateValues() {
+    void testSort_DuplicateBogieNames() {
 
-        int[] input = {72, 56, 56, 24};
-        int[] expected = {24, 56, 56, 72};
+        String[] input = {
+                "Sleeper",
+                "AC Chair",
+                "Sleeper",
+                "General"
+        };
 
-        int[] result =
-                TrainConsistManagementApp.bubbleSort(input);
+        String[] expected = {
+                "AC Chair",
+                "General",
+                "Sleeper",
+                "Sleeper"
+        };
+
+        String[] result =
+                TrainConsistManagementApp.sortBogieNames(input);
 
         assertArrayEquals(expected, result);
     }
@@ -46,24 +103,16 @@ class TrainConsistManagementAppTest {
     @Test
     void testSort_SingleElementArray() {
 
-        int[] input = {50};
-        int[] expected = {50};
+        String[] input = {
+                "Sleeper"
+        };
 
-        int[] result =
-                TrainConsistManagementApp.bubbleSort(input);
+        String[] expected = {
+                "Sleeper"
+        };
 
-        assertArrayEquals(expected, result);
-    }
-
-    // testSort_AllEqualValues
-    @Test
-    void testSort_AllEqualValues() {
-
-        int[] input = {40, 40, 40};
-        int[] expected = {40, 40, 40};
-
-        int[] result =
-                TrainConsistManagementApp.bubbleSort(input);
+        String[] result =
+                TrainConsistManagementApp.sortBogieNames(input);
 
         assertArrayEquals(expected, result);
     }
