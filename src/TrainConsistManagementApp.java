@@ -1,16 +1,43 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
-    // Bogie Class (reuse structure from earlier UCs)
-    static class Bogie {
+    // ============================
+    // Custom Exception
+    // ============================
+
+    static class InvalidCapacityException extends Exception {
+
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
+    // ============================
+    // Passenger Bogie Class
+    // ============================
+
+    static class PassengerBogie {
+
         String name;
         int capacity;
 
-        Bogie(String name, int capacity) {
+        // Constructor with validation
+        PassengerBogie(String name, int capacity)
+                throws InvalidCapacityException {
+
+            if (capacity <= 0) {
+                throw new InvalidCapacityException(
+                        "Capacity must be greater than zero"
+                );
+            }
+
             this.name = name;
             this.capacity = capacity;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public int getCapacity() {
@@ -23,79 +50,36 @@ public class TrainConsistManagementApp {
         }
     }
 
-    // LOOP FILTERING METHOD
-    public static List<Bogie> filterUsingLoop(List<Bogie> bogies) {
-
-        List<Bogie> result = new ArrayList<>();
-
-        for (Bogie b : bogies) {
-            if (b.capacity > 60) {
-                result.add(b);
-            }
-        }
-
-        return result;
-    }
-
-    // STREAM FILTERING METHOD
-    public static List<Bogie> filterUsingStream(List<Bogie> bogies) {
-
-        return bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-    }
-
-    // PERFORMANCE MEASUREMENT
-    public static long measureLoopTime(List<Bogie> bogies) {
-
-        long start = System.nanoTime();
-
-        filterUsingLoop(bogies);
-
-        long end = System.nanoTime();
-
-        return end - start;
-    }
-
-    public static long measureStreamTime(List<Bogie> bogies) {
-
-        long start = System.nanoTime();
-
-        filterUsingStream(bogies);
-
-        long end = System.nanoTime();
-
-        return end - start;
-    }
-
-    // MAIN METHOD (Performance Demo)
+    // ============================
+    // MAIN METHOD (Demo)
+    // ============================
 
     public static void main(String[] args) {
 
-        System.out.println("=== UC13: Performance Comparison ===");
+        System.out.println("=== UC14: Custom Exception Handling ===");
 
-        List<Bogie> bogies = new ArrayList<>();
+        try {
 
-        // Create sample dataset
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 64));
-        bogies.add(new Bogie("Second Sitting", 50));
+            PassengerBogie bogie1 =
+                    new PassengerBogie("Sleeper", 72);
 
-        // LOOP TIME
-        long loopTime = measureLoopTime(bogies);
+            PassengerBogie bogie2 =
+                    new PassengerBogie("AC Chair", 56);
 
-        // STREAM TIME
-        long streamTime = measureStreamTime(bogies);
+            System.out.println("Created Bogies:");
+            System.out.println(bogie1);
+            System.out.println(bogie2);
 
-        System.out.println("Loop Execution Time: " + loopTime + " ns");
-        System.out.println("Stream Execution Time: " + streamTime + " ns");
+            // Invalid Example
+            PassengerBogie invalidBogie =
+                    new PassengerBogie("First Class", 0);
 
-        // Show results
-        List<Bogie> loopResult = filterUsingLoop(bogies);
-        List<Bogie> streamResult = filterUsingStream(bogies);
+        }
+        catch (InvalidCapacityException e) {
 
-        System.out.println("Loop Result: " + loopResult);
-        System.out.println("Stream Result: " + streamResult);
+            System.out.println(
+                    "Error: " + e.getMessage()
+            );
+        }
     }
 }
