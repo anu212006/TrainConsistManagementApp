@@ -1,82 +1,47 @@
-package com.train.uc18;
-
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-public class UC18_LinearSearchBogieTest {
+public class BogieSearchBinaryTest {
 
-    String[] bogieIds = {
-            "BG101",
-            "BG205",
-            "BG309",
-            "BG412",
-            "BG550"
-    };
-
-    // Test 1
     @Test
-    void testSearch_BogieFound() {
-
-        boolean result =
-                com.train.uc18.UC18_LinearSearchBogie.searchBogie(
-                        bogieIds,
-                        "BG309"
-                );
-
-        assertTrue(result);
+    void testBinarySearch_BogieFound() {
+        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG309"));
     }
 
-    // Test 2
     @Test
-    void testSearch_BogieNotFound() {
-
-        boolean result =
-                com.train.uc18.UC18_LinearSearchBogie.searchBogie(
-                        bogieIds,
-                        "BG999"
-                );
-
-        assertFalse(result);
+    void testBinarySearch_BogieNotFound() {
+        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
+        assertFalse(BogieSearchBinary.binarySearchBogie(data, "BG999"));
     }
 
-    // Test 3
     @Test
-    void testSearch_FirstElementMatch() {
-
-        boolean result =
-                com.train.uc18.UC18_LinearSearchBogie.searchBogie(
-                        bogieIds,
-                        "BG101"
-                );
-
-        assertTrue(result);
+    void testBinarySearch_FirstElementMatch() {
+        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG101"));
     }
 
-    // Test 4
     @Test
-    void testSearch_LastElementMatch() {
-
-        boolean result =
-                com.train.uc18.UC18_LinearSearchBogie.searchBogie(
-                        bogieIds,
-                        "BG550"
-                );
-
-        assertTrue(result);
+    void testBinarySearch_LastElementMatch() {
+        String[] data = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG550"));
     }
 
-    // Test 5
     @Test
-    void testSearch_SingleElementArray() {
+    void testBinarySearch_SingleElementArray() {
+        String[] data = {"BG101"};
+        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG101"));
+    }
 
-        String[] single = {"BG101"};
+    @Test
+    void testBinarySearch_EmptyArray() {
+        String[] data = {};
+        assertFalse(BogieSearchBinary.binarySearchBogie(data, "BG101"));
+    }
 
-        boolean result =
-                com.train.uc18.UC18_LinearSearchBogie.searchBogie(
-                        single,
-                        "BG101"
-                );
-
-        assertTrue(result);
+    @Test
+    void testBinarySearch_UnsortedInputHandled() {
+        String[] data = {"BG309","BG101","BG550","BG205","BG412"};
+        assertTrue(BogieSearchBinary.binarySearchBogie(data, "BG205"));
     }
 }

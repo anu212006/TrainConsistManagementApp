@@ -1,48 +1,83 @@
-package com.train.uc18;
+import java.util.Arrays;
+import java.util.Scanner;
 
-public class UC18_LinearSearchBogie {
+public class BogieSearchBinary {
 
-    // Linear Search Method
-    public static boolean searchBogie(String[] bogieIds, String searchKey) {
+    // Binary Search Method
+    public static boolean binarySearchBogie(String[] bogieIds, String key) {
 
-        // Traverse the array sequentially
-        for (int i = 0; i < bogieIds.length; i++) {
+        // Handle empty array
+        if (bogieIds == null || bogieIds.length == 0) {
+            return false;
+        }
 
-            // Compare each element
-            if (bogieIds[i].equals(searchKey)) {
+        // Ensure data is sorted (handles unsorted input case)
+        Arrays.sort(bogieIds);
 
+        int low = 0;
+        int high = bogieIds.length - 1;
+
+        while (low <= high) {
+
+            // Compute mid index
+            int mid = (low + high) / 2;
+
+            // Compare key with middle element
+            int result = key.compareTo(bogieIds[mid]);
+
+            if (result == 0) {
                 // Match found
                 return true;
             }
+
+            else if (result < 0) {
+                // Search left half
+                high = mid - 1;
+            }
+
+            else {
+                // Search right half
+                low = mid + 1;
+            }
         }
 
-        // No match found
+        // Key not found
         return false;
     }
 
-    // Main Method (for running program)
+    // Main Method
     public static void main(String[] args) {
 
-        // Create array of bogie IDs
-        String[] bogieIds = {
-                "BG101",
-                "BG205",
-                "BG309",
-                "BG412",
-                "BG550"
-        };
+        Scanner sc = new Scanner(System.in);
 
-        // Bogie to search
-        String searchKey = "BG309";
+        // Input number of bogies
+        System.out.print("Enter number of bogie IDs: ");
+        int n = sc.nextInt();
+        sc.nextLine();
 
-        // Call search method
-        boolean found = searchBogie(bogieIds, searchKey);
+        String[] bogieIds = new String[n];
+
+        // Input bogie IDs
+        System.out.println("Enter bogie IDs:");
+
+        for (int i = 0; i < n; i++) {
+            bogieIds[i] = sc.nextLine();
+        }
+
+        // Input search key
+        System.out.print("Enter bogie ID to search: ");
+        String key = sc.nextLine();
+
+        // Perform Binary Search
+        boolean found = binarySearchBogie(bogieIds, key);
 
         // Display result
         if (found) {
-            System.out.println("Bogie Found: " + searchKey);
+            System.out.println("Bogie ID Found");
         } else {
-            System.out.println("Bogie Not Found: " + searchKey);
+            System.out.println("Bogie ID Not Found");
         }
+
+        sc.close();
     }
 }
