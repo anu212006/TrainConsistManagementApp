@@ -1,85 +1,92 @@
 import java.util.*;
 
-public class TrainConsistManagementApp {
+// Custom Runtime Exception
+class CargoSafetyException extends RuntimeException {
 
-    // ============================
-    // Custom Exception
-    // ============================
+    public CargoSafetyException(String message) {
+        super(message);
+    }
+}
 
-    static class InvalidCapacityException extends Exception {
+// Goods Bogie Class
+class GoodsBogie {
 
-        public InvalidCapacityException(String message) {
-            super(message);
-        }
+    String shape;
+    String cargo;
+
+    public GoodsBogie(String shape) {
+        this.shape = shape;
     }
 
-    // ============================
-    // Passenger Bogie Class
-    // ============================
-
-    static class PassengerBogie {
-
-        String name;
-        int capacity;
-
-        // Constructor with validation
-        PassengerBogie(String name, int capacity)
-                throws InvalidCapacityException {
-
-            if (capacity <= 0) {
-                throw new InvalidCapacityException(
-                        "Capacity must be greater than zero"
-                );
-            }
-
-            this.name = name;
-            this.capacity = capacity;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getCapacity() {
-            return capacity;
-        }
-
-        @Override
-        public String toString() {
-            return name + " (" + capacity + ")";
-        }
-    }
-
-    // ============================
-    // MAIN METHOD (Demo)
-    // ============================
-
-    public static void main(String[] args) {
-
-        System.out.println("=== UC14: Custom Exception Handling ===");
+    public void assignCargo(String cargo) {
 
         try {
 
-            PassengerBogie bogie1 =
-                    new PassengerBogie("Sleeper", 72);
+            // Rule: Rectangular cannot carry Petroleum
+            if (shape.equalsIgnoreCase("Rectangular")
+                    && cargo.equalsIgnoreCase("Petroleum")) {
 
-            PassengerBogie bogie2 =
-                    new PassengerBogie("AC Chair", 56);
+                throw new CargoSafetyException(
+                        "Petroleum cannot be assigned to Rectangular bogie"
+                );
+            }
 
-            System.out.println("Created Bogies:");
-            System.out.println(bogie1);
-            System.out.println(bogie2);
+            // Safe assignment
+            this.cargo = cargo;
 
-            // Invalid Example
-            PassengerBogie invalidBogie =
-                    new PassengerBogie("First Class", 0);
+            System.out.println(
+                    "Cargo assigned successfully: "
+                            + cargo + " to " + shape
+            );
 
         }
-        catch (InvalidCapacityException e) {
+        catch (CargoSafetyException e) {
 
             System.out.println(
                     "Error: " + e.getMessage()
             );
+
         }
+        finally {
+
+            System.out.println(
+                    "Cargo assignment attempt completed."
+            );
+        }
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+}
+
+// Main Class
+public class TrainConsistManagementApp {
+
+    public static void main(String[] args) {
+
+        System.out.println("=== UC15 Execution ===");
+
+        // Safe case
+        GoodsBogie bogie1 =
+                new GoodsBogie("Cylindrical");
+
+        bogie1.assignCargo("Petroleum");
+
+        // Unsafe case
+        GoodsBogie bogie2 =
+                new GoodsBogie("Rectangular");
+
+        bogie2.assignCargo("Petroleum");
+
+        // Another safe case
+        GoodsBogie bogie3 =
+                new GoodsBogie("Rectangular");
+
+        bogie3.assignCargo("Coal");
+
+        System.out.println(
+                "Program continues safely."
+        );
     }
 }
