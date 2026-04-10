@@ -1,106 +1,72 @@
 import org.junit.jupiter.api.Test;
+import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTest {
 
-    // Valid Train ID
     @Test
-    void testRegex_ValidTrainID() {
-        assertTrue(
-                TrainConsistManagementApp.validateTrainID("TRN-1234")
-        );
+    void testSafety_AllBogiesValid() {
+
+        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Open", "Coal"));
+
+        boolean result =
+                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+
+        assertTrue(result);
     }
 
-    // Invalid Train ID Format
     @Test
-    void testRegex_InvalidTrainIDFormat() {
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("TRAIN12")
-        );
+    void testSafety_CylindricalWithInvalidCargo() {
 
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("TRN12A")
-        );
+        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
 
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("1234-TRN")
-        );
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal"));
+
+        boolean result =
+                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+
+        assertFalse(result);
     }
 
-    // Valid Cargo Code
     @Test
-    void testRegex_ValidCargoCode() {
-        assertTrue(
-                TrainConsistManagementApp.validateCargoCode("PET-AB")
-        );
+    void testSafety_NonCylindricalBogiesAllowed() {
+
+        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Open", "Coal"));
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Box", "Grain"));
+
+        boolean result =
+                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+
+        assertTrue(result);
     }
 
-    // Invalid Cargo Code
     @Test
-    void testRegex_InvalidCargoCodeFormat() {
+    void testSafety_MixedBogiesWithViolation() {
 
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("PET-ab")
-        );
+        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
 
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("PET123")
-        );
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal"));
 
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("AB-PET")
-        );
+        boolean result =
+                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+
+        assertFalse(result);
     }
 
-    // Train ID Digit Length Validation
     @Test
-    void testRegex_TrainIDDigitLengthValidation() {
+    void testSafety_EmptyBogieList() {
 
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("TRN-123")
-        );
+        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
 
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("TRN-12345")
-        );
-    }
+        boolean result =
+                TrainConsistManagementApp.checkSafetyCompliance(bogies);
 
-    // Cargo Code Uppercase Validation
-    @Test
-    void testRegex_CargoCodeUppercaseValidation() {
-
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("PET-Ab")
-        );
-
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("PET-aB")
-        );
-    }
-
-    // Empty Input Handling
-    @Test
-    void testRegex_EmptyInputHandling() {
-
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("")
-        );
-
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("")
-        );
-    }
-
-    // Exact Pattern Match
-    @Test
-    void testRegex_ExactPatternMatch() {
-
-        assertFalse(
-                TrainConsistManagementApp.validateTrainID("TRN-1234X")
-        );
-
-        assertFalse(
-                TrainConsistManagementApp.validateCargoCode("PET-ABC")
-        );
+        assertTrue(result);
     }
 }
