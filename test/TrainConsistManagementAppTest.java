@@ -4,69 +4,96 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTest {
 
+    // Loop Filtering Test
     @Test
-    void testSafety_AllBogiesValid() {
+    void testLoopFilteringLogic() {
 
-        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+        List<TrainConsistManagementApp.Bogie> bogies =
+                new ArrayList<>();
 
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"));
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Open", "Coal"));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
+        bogies.add(new TrainConsistManagementApp.Bogie("AC", 56));
 
-        boolean result =
-                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+        List<TrainConsistManagementApp.Bogie> result =
+                TrainConsistManagementApp.filterUsingLoop(bogies);
 
-        assertTrue(result);
+        assertEquals(1, result.size());
     }
 
+    // Stream Filtering Test
     @Test
-    void testSafety_CylindricalWithInvalidCargo() {
+    void testStreamFilteringLogic() {
 
-        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+        List<TrainConsistManagementApp.Bogie> bogies =
+                new ArrayList<>();
 
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal"));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
+        bogies.add(new TrainConsistManagementApp.Bogie("AC", 56));
 
-        boolean result =
-                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+        List<TrainConsistManagementApp.Bogie> result =
+                TrainConsistManagementApp.filterUsingStream(bogies);
 
-        assertFalse(result);
+        assertEquals(1, result.size());
     }
 
+    // Compare Loop vs Stream Results
     @Test
-    void testSafety_NonCylindricalBogiesAllowed() {
+    void testLoopAndStreamResultsMatch() {
 
-        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+        List<TrainConsistManagementApp.Bogie> bogies =
+                new ArrayList<>();
 
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Open", "Coal"));
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Box", "Grain"));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
+        bogies.add(new TrainConsistManagementApp.Bogie("AC", 56));
+        bogies.add(new TrainConsistManagementApp.Bogie("First", 64));
 
-        boolean result =
-                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+        List<?> loopResult =
+                TrainConsistManagementApp.filterUsingLoop(bogies);
 
-        assertTrue(result);
+        List<?> streamResult =
+                TrainConsistManagementApp.filterUsingStream(bogies);
+
+        assertEquals(loopResult.size(), streamResult.size());
     }
 
+    // Execution Time Test
     @Test
-    void testSafety_MixedBogiesWithViolation() {
+    void testExecutionTimeMeasurement() {
 
-        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+        List<TrainConsistManagementApp.Bogie> bogies =
+                new ArrayList<>();
 
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"));
-        bogies.add(new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal"));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
 
-        boolean result =
-                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+        long loopTime =
+                TrainConsistManagementApp.measureLoopTime(bogies);
 
-        assertFalse(result);
+        long streamTime =
+                TrainConsistManagementApp.measureStreamTime(bogies);
+
+        assertTrue(loopTime >= 0);
+        assertTrue(streamTime >= 0);
     }
 
+    // Large Dataset Test
     @Test
-    void testSafety_EmptyBogieList() {
+    void testLargeDatasetProcessing() {
 
-        List<TrainConsistManagementApp.GoodsBogie> bogies = new ArrayList<>();
+        List<TrainConsistManagementApp.Bogie> bogies =
+                new ArrayList<>();
 
-        boolean result =
-                TrainConsistManagementApp.checkSafetyCompliance(bogies);
+        for (int i = 0; i < 1000; i++) {
+            bogies.add(
+                    new TrainConsistManagementApp.Bogie(
+                            "Sleeper",
+                            50 + (i % 30)
+                    )
+            );
+        }
 
-        assertTrue(result);
+        List<?> result =
+                TrainConsistManagementApp.filterUsingStream(bogies);
+
+        assertNotNull(result);
     }
 }
