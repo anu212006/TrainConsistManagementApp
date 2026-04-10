@@ -1,73 +1,106 @@
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class TrainConsistManagementAppTest {
+public class TrainConsistManagementAppTest {
 
-    private List<Bogie> createBogieList() {
-
-        List<Bogie> bogies = new ArrayList<>();
-
-        bogies.add(new Bogie("Sleeper", 72, "Passenger"));
-        bogies.add(new Bogie("AC Chair", 56, "Passenger"));
-        bogies.add(new Bogie("First Class", 24, "Passenger"));
-
-        return bogies;
+    // Valid Train ID
+    @Test
+    void testRegex_ValidTrainID() {
+        assertTrue(
+                TrainConsistManagementApp.validateTrainID("TRN-1234")
+        );
     }
 
+    // Invalid Train ID Format
     @Test
-    void testReduce_TotalSeatCalculation() {
+    void testRegex_InvalidTrainIDFormat() {
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("TRAIN12")
+        );
 
-        List<Bogie> bogies = createBogieList();
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("TRN12A")
+        );
 
-        int total =
-                bogies.stream()
-                        .map(b -> b.capacity)
-                        .reduce(0, Integer::sum);
-
-        assertEquals(152, total);
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("1234-TRN")
+        );
     }
 
+    // Valid Cargo Code
     @Test
-    void testReduce_SingleBogieCapacity() {
-
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72, "Passenger"));
-
-        int total =
-                bogies.stream()
-                        .map(b -> b.capacity)
-                        .reduce(0, Integer::sum);
-
-        assertEquals(72, total);
+    void testRegex_ValidCargoCode() {
+        assertTrue(
+                TrainConsistManagementApp.validateCargoCode("PET-AB")
+        );
     }
 
+    // Invalid Cargo Code
     @Test
-    void testReduce_EmptyBogieList() {
+    void testRegex_InvalidCargoCodeFormat() {
 
-        List<Bogie> bogies = new ArrayList<>();
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("PET-ab")
+        );
 
-        int total =
-                bogies.stream()
-                        .map(b -> b.capacity)
-                        .reduce(0, Integer::sum);
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("PET123")
+        );
 
-        assertEquals(0, total);
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("AB-PET")
+        );
     }
 
+    // Train ID Digit Length Validation
     @Test
-    void testReduce_OriginalListUnchanged() {
+    void testRegex_TrainIDDigitLengthValidation() {
 
-        List<Bogie> bogies = createBogieList();
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("TRN-123")
+        );
 
-        int originalSize = bogies.size();
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("TRN-12345")
+        );
+    }
 
-        bogies.stream()
-                .map(b -> b.capacity)
-                .reduce(0, Integer::sum);
+    // Cargo Code Uppercase Validation
+    @Test
+    void testRegex_CargoCodeUppercaseValidation() {
 
-        assertEquals(originalSize, bogies.size());
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("PET-Ab")
+        );
+
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("PET-aB")
+        );
+    }
+
+    // Empty Input Handling
+    @Test
+    void testRegex_EmptyInputHandling() {
+
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("")
+        );
+
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("")
+        );
+    }
+
+    // Exact Pattern Match
+    @Test
+    void testRegex_ExactPatternMatch() {
+
+        assertFalse(
+                TrainConsistManagementApp.validateTrainID("TRN-1234X")
+        );
+
+        assertFalse(
+                TrainConsistManagementApp.validateCargoCode("PET-ABC")
+        );
     }
 }

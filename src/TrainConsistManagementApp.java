@@ -1,54 +1,46 @@
-import java.util.*;
-import java.util.stream.Collectors;
-
-class Bogie {
-
-    String name;
-    int capacity;
-    String type;
-
-    Bogie(String name, int capacity, String type) {
-        this.name = name;
-        this.capacity = capacity;
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + type + ") - Capacity: " + capacity;
-    }
-}
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class TrainConsistManagementApp {
 
+    // UC11 Methods (Reusable for testing)
+
+    public static boolean validateTrainID(String trainId) {
+        String trainPattern = "TRN-\\d{4}";
+        Pattern pattern = Pattern.compile(trainPattern);
+        Matcher matcher = pattern.matcher(trainId);
+        return matcher.matches();
+    }
+
+    public static boolean validateCargoCode(String cargoCode) {
+        String cargoPattern = "PET-[A-Z]{2}";
+        Pattern pattern = Pattern.compile(cargoPattern);
+        Matcher matcher = pattern.matcher(cargoCode);
+        return matcher.matches();
+    }
+
+    // MAIN METHOD (Demo Run)
+
     public static void main(String[] args) {
 
-        System.out.println("=== UC10: Count Total Seats using reduce() ===");
+        System.out.println("=== UC11: Train ID & Cargo Code Validation ===");
 
-        // Create Bogie List
-        List<Bogie> bogies = new ArrayList<>();
+        String trainId = "TRN-1234";
+        String cargoCode = "PET-AB";
 
-        bogies.add(new Bogie("Sleeper", 72, "Passenger"));
-        bogies.add(new Bogie("AC Chair", 56, "Passenger"));
-        bogies.add(new Bogie("First Class", 24, "Passenger"));
-        bogies.add(new Bogie("Second Sitting", 90, "Passenger"));
+        boolean trainValid = validateTrainID(trainId);
+        boolean cargoValid = validateCargoCode(cargoCode);
 
-        System.out.println("\nAvailable Bogies:");
-
-        for (Bogie b : bogies) {
-            System.out.println(b);
+        if (trainValid) {
+            System.out.println("Valid Train ID: " + trainId);
+        } else {
+            System.out.println("Invalid Train ID: " + trainId);
         }
 
-        // Step 1: Extract capacity using map()
-        // Step 2: Sum using reduce()
-
-        int totalSeats =
-                bogies.stream()
-                        .map(b -> b.capacity)
-                        .reduce(0, Integer::sum);
-
-        System.out.println("\nTotal Seating Capacity: " + totalSeats);
-
-        System.out.println("\nUC10 Execution Completed.");
+        if (cargoValid) {
+            System.out.println("Valid Cargo Code: " + cargoCode);
+        } else {
+            System.out.println("Invalid Cargo Code: " + cargoCode);
+        }
     }
 }
