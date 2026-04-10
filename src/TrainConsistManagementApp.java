@@ -5,7 +5,7 @@ class Bogie {
 
     String name;
     int capacity;
-    String type; // Passenger or Goods
+    String type;
 
     Bogie(String name, int capacity, String type) {
         this.name = name;
@@ -23,7 +23,7 @@ public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        System.out.println("=== UC9: Group Bogies by Type ===");
+        System.out.println("=== UC10: Count Total Seats using reduce() ===");
 
         // Create Bogie List
         List<Bogie> bogies = new ArrayList<>();
@@ -31,26 +31,24 @@ public class TrainConsistManagementApp {
         bogies.add(new Bogie("Sleeper", 72, "Passenger"));
         bogies.add(new Bogie("AC Chair", 56, "Passenger"));
         bogies.add(new Bogie("First Class", 24, "Passenger"));
-        bogies.add(new Bogie("Cargo Rectangular", 100, "Goods"));
-        bogies.add(new Bogie("Cargo Cylindrical", 120, "Goods"));
+        bogies.add(new Bogie("Second Sitting", 90, "Passenger"));
 
-        // Group bogies by type
-        Map<String, List<Bogie>> groupedBogies =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(b -> b.type));
+        System.out.println("\nAvailable Bogies:");
 
-        // Display grouped bogies
-        System.out.println("\nGrouped Bogies:");
-
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-
-            System.out.println("\nType: " + entry.getKey());
-
-            for (Bogie b : entry.getValue()) {
-                System.out.println(b);
-            }
+        for (Bogie b : bogies) {
+            System.out.println(b);
         }
 
-        System.out.println("\nUC9 Execution Completed.");
+        // Step 1: Extract capacity using map()
+        // Step 2: Sum using reduce()
+
+        int totalSeats =
+                bogies.stream()
+                        .map(b -> b.capacity)
+                        .reduce(0, Integer::sum);
+
+        System.out.println("\nTotal Seating Capacity: " + totalSeats);
+
+        System.out.println("\nUC10 Execution Completed.");
     }
 }
